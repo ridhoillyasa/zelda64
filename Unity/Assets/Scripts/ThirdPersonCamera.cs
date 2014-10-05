@@ -19,6 +19,9 @@
 /// misrepresented as being the original software.
 /// 3. This notice may not be removed or altered from any source distribution.
 /// </summary>
+/// 
+/// Modified ///
+/// 
 using UnityEngine;
 using System.Collections;
 
@@ -293,7 +296,7 @@ public class ThirdPersonCamera : MonoBehaviour
 			case CamStates.FirstPerson:	
 				// Looking up and down
 				// Calculate the amount of rotation and apply to the firstPersonCamPos GameObject
-			    xAxisRot += (leftY * 0.5f * firstPersonLookSpeed);			
+			    xAxisRot += (-leftY * 0.5f * firstPersonLookSpeed);			
     			xAxisRot = Mathf.Clamp(xAxisRot, firstPersonXAxisClamp.x, firstPersonXAxisClamp.y); 
 				firstPersonCamPos.XForm.localRotation = Quaternion.Euler(xAxisRot, 0, 0);
 							

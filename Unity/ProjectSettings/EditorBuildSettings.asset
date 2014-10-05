@@ -5,7 +5,9 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Demo/HyruleFieldDemo.unity
   - enabled: 0
     path: Assets/Scenes/Locomotion.unity
+  - enabled: 1
+    path: Assets/Scenes/Dungeons/DemoDungeon.unity
