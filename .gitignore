@@ -1,1 +1,6 @@
-Library/
+Unity/Library/
+Unity/obj/
+Unity/Temp/
+Unity/Unity.userprefs
+Unity/UnityVS.Unity.*.suo
+Unity/UnityVS.Unity.sln.ide/

@@ -664,6 +664,18 @@ Prefab:
       propertyPath: gamecam
       value: 
       objectReference: {fileID: 1247427809}
+    - target: {fileID: 11400002, guid: 79efd4c2b57a6d24f9555a5851c00ad1, type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9500000, guid: 79efd4c2b57a6d24f9555a5851c00ad1, type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9500000, guid: 79efd4c2b57a6d24f9555a5851c00ad1, type: 2}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 1d8cd441c6067934197851600c71f10d, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 79efd4c2b57a6d24f9555a5851c00ad1, type: 2}
   m_RootGameObject: {fileID: 1240106658}
@@ -2658,6 +2670,7 @@ GameObject:
   - 136: {fileID: 1240106662}
   - 114: {fileID: 1240106661}
   - 114: {fileID: 1240106660}
+  - 114: {fileID: 1240106665}
   m_Layer: 0
   m_Name: Beta
   m_TagString: Player
@@ -2709,7 +2722,7 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 314450125}
   m_GameObject: {fileID: 1240106658}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2bfb47c0277320049b72dfa7cab812d1, type: 3}
   m_Name: 
@@ -2764,12 +2777,27 @@ Animator:
   m_GameObject: {fileID: 1240106658}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: aef9e0d7fbf9f924091a41b93ff4fa44, type: 3}
-  m_Controller: {fileID: 9100000, guid: 00e9a4d503d58154fb40703b3dfa1e40, type: 2}
+  m_Controller: {fileID: 9100000, guid: 1d8cd441c6067934197851600c71f10d, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &1240106665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1240106658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c487bea4bd945734fa7ae6aa2b4377db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AngleLerpT: 2
+  DeadZone: .0500000007
+  ThirdPersonCamera: {fileID: 1247427809}
+  SpeedLerpT: 2
 --- !u!1 &1247427807
 GameObject:
   m_ObjectHideFlags: 0
