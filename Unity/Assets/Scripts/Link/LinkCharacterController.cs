@@ -4,16 +4,30 @@ using System;
 
 public class LinkCharacterController : MonoBehaviour
 {
+
+    #region Constants
+
     private string SPEED_NAME = "Speed";
+
+    #endregion
+
+    #region Variables
 
     private Animator m_animator;
     private CapsuleCollider m_collider;
     private float m_prevSpeed;
 
-    public float AngleLerpT = 2;
-    public float DeadZone = .05f;
+    #endregion
+
+    #region Properties
+
+    public float DeadZone = 0.05f;
     public ThirdPersonCamera ThirdPersonCamera = null;
     public float SpeedLerpT = 2;
+
+    #endregion
+
+    #region Methods
 
     private float ApplyDeadZone(float stickValue, float deadZone)
     {
@@ -27,41 +41,51 @@ public class LinkCharacterController : MonoBehaviour
         return appliedStickValue;
     }
 
+    private float ComputePythagoreanTheorem(float a, float b)
+    {
+        return Mathf.Sqrt(Mathf.Pow(a, 2) + Mathf.Pow(b, 2));
+    }
+
     private float GetAngle(float horizontalAxis, float verticalAxis)
     {
-        float cameraAngle = 0;
-        Vector3 cameraAxis = Vector3.zero;
-        this.ThirdPersonCamera.transform.rotation.ToAngleAxis(out cameraAngle, out cameraAxis);
-        cameraAngle *= Mathf.Deg2Rad;
+        // Get Camera Angle
+        float cameraAngle = this.ThirdPersonCamera.ParentRig.rotation.eulerAngles.y;
+        // Get Character Angle
+        float characterAngle = this.transform.rotation.eulerAngles.y;
 
-        float characterAngle = 0;
-        Vector3 characterAxis = Vector3.zero;
-        this.transform.rotation.ToAngleAxis(out characterAngle, out characterAxis);
-        characterAngle *= Mathf.Deg2Rad;
+        float relativeTransformAngle = characterAngle;// - cameraAngle;
 
-        float transformAngle = characterAngle - cameraAngle;
+        float rotateByAngle = 0;
+        float targetAngle = 0;
 
-        float adjustAngle = 0;
-        float finishAngle = 0;
-
-        float hypotenuse = Mathf.Sqrt(Mathf.Pow(horizontalAxis, 2) + Mathf.Pow(verticalAxis, 2));
+        float hypotenuse = this.Normalize(this.ComputePythagoreanTheorem(horizontalAxis, verticalAxis));
 
         if (hypotenuse != 0)
         {
             float sine = horizontalAxis / hypotenuse;
 
-            finishAngle = Mathf.Asin(sine) + cameraAngle - (Mathf.PI / 2);
-
-            finishAngle = Mathf.Lerp(transformAngle, finishAngle, AngleLerpT);
-            adjustAngle = finishAngle - transformAngle;
+            targetAngle = Mathf.Asin(sine) * Mathf.Rad2Deg + 90;
 
             if (verticalAxis < 0)
             {
-                adjustAngle *= -1;
+                targetAngle *= -1;
             }
+
+            if (targetAngle < 0)
+            {
+                targetAngle += 360;
+            }
+            else if (targetAngle >= 360)
+            {
+                targetAngle -= 360;
+            }
+
+            targetAngle = Mathf.Clamp(targetAngle, 0, 360);
+
+            rotateByAngle = targetAngle - relativeTransformAngle;
         }
 
-        return adjustAngle;
+        return rotateByAngle;
     }
 
     private float GetSpeed(float horizontalAxis, float verticalAxis)
@@ -73,6 +97,11 @@ public class LinkCharacterController : MonoBehaviour
         this.m_prevSpeed = speed;
 
         return speed;
+    }
+
+    private float Normalize(float value)
+    {
+        return Mathf.Clamp(value, 0, 1);
     }
 
     // Use this for initialization
@@ -87,7 +116,7 @@ public class LinkCharacterController : MonoBehaviour
     {
         if (this.m_animator != null && this.m_collider != null)
         {
-            float deadZone = this.DeadZone;
+            float deadZone = this.DeadZone; // Defaults to .05
 
             float horizontalAxis = this.ApplyDeadZone(Input.GetAxis("Horizontal"), deadZone);
             float verticalAxis = this.ApplyDeadZone(Input.GetAxis("Vertical"), deadZone);
@@ -95,8 +124,11 @@ public class LinkCharacterController : MonoBehaviour
             float angle = this.GetAngle(horizontalAxis, verticalAxis);
             float speed = this.GetSpeed(horizontalAxis, verticalAxis);
 
-            this.transform.Rotate(new Vector3(0, angle * Mathf.Rad2Deg, 0));
+            this.transform.Rotate(new Vector3(0, angle, 0));
             this.m_animator.SetFloat(SPEED_NAME, speed);
         }
     }
+
+    #endregion
+
 }
