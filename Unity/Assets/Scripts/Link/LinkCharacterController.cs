@@ -56,52 +56,59 @@ public class LinkCharacterController : MonoBehaviour
         float relativeTransformAngle = characterAngle;// - cameraAngle;
 
         float rotateByAngle = 0;
-        float targetAngle = 0;
 
-        float hypotenuse = this.Normalize(this.ComputePythagoreanTheorem(horizontalAxis, verticalAxis));
-
-        if (hypotenuse != 0)
+        if (horizontalAxis != 0 || verticalAxis != 0)
         {
-            float sine = horizontalAxis / hypotenuse;
+            float controllerAngle = this.GetControllerAngle(horizontalAxis, verticalAxis);
 
-            targetAngle = Mathf.Asin(sine) * Mathf.Rad2Deg + 90;
+            rotateByAngle = controllerAngle - relativeTransformAngle;
 
-            if (verticalAxis < 0)
-            {
-                targetAngle *= -1;
-            }
-
-            if (targetAngle < 0)
-            {
-                targetAngle += 360;
-            }
-            else if (targetAngle >= 360)
-            {
-                targetAngle -= 360;
-            }
-
-            targetAngle = Mathf.Clamp(targetAngle, 0, 360);
-
-            rotateByAngle = targetAngle - relativeTransformAngle;
+            Debug.Log(controllerAngle);
         }
 
         return rotateByAngle;
     }
 
+    private float GetControllerAngle(float horizontalAxis, float verticalAxis)
+    {
+        float controllerAngle = 0;
+        float hypotenuse = this.ComputePythagoreanTheorem(horizontalAxis, verticalAxis);
+
+        if (hypotenuse != 0)
+        {
+            float sine = horizontalAxis / hypotenuse;
+
+            controllerAngle = Mathf.Asin(sine) * Mathf.Rad2Deg + 90;
+
+            if (verticalAxis < 0)
+            {
+                controllerAngle *= -1;
+            }
+
+            if (controllerAngle < 0)
+            {
+                controllerAngle += 360;
+            }
+            else if (controllerAngle >= 360)
+            {
+                controllerAngle -= 360;
+            }
+
+            controllerAngle = Mathf.Clamp(controllerAngle, 0, 360);
+        }
+
+        return controllerAngle;
+    }
+
     private float GetSpeed(float horizontalAxis, float verticalAxis)
     {
-        float speed = Mathf.Abs(Mathf.Sqrt(Mathf.Pow(horizontalAxis, 2) + Mathf.Pow(verticalAxis, 2)));
+        float speed = Mathf.Abs(this.ComputePythagoreanTheorem(horizontalAxis, verticalAxis));
 
         speed = Mathf.Lerp(this.m_prevSpeed, speed, this.SpeedLerpT);
 
         this.m_prevSpeed = speed;
 
         return speed;
-    }
-
-    private float Normalize(float value)
-    {
-        return Mathf.Clamp(value, 0, 1);
     }
 
     // Use this for initialization
@@ -120,6 +127,8 @@ public class LinkCharacterController : MonoBehaviour
 
             float horizontalAxis = this.ApplyDeadZone(Input.GetAxis("Horizontal"), deadZone);
             float verticalAxis = this.ApplyDeadZone(Input.GetAxis("Vertical"), deadZone);
+
+            Debug.Log(string.Format("({0}, {1})", horizontalAxis, verticalAxis));
 
             float angle = this.GetAngle(horizontalAxis, verticalAxis);
             float speed = this.GetSpeed(horizontalAxis, verticalAxis);
